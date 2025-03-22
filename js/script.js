@@ -292,6 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ================== Slider ====================
     const slides = document.querySelectorAll('.offer__slide');
+    const slider = document.querySelector('.offer__slider');
     const prev = document.querySelector('.offer__slider-prev');
     const next = document.querySelector('.offer__slider-next');
     const current = document.querySelector('#current');
@@ -299,72 +300,188 @@ document.addEventListener('DOMContentLoaded', () => {
     const slidesWrapper = document.querySelector('.offer__slider-wrapper');
     const slidesField = document.querySelector('.offer__slider-inner');
 
-    const width = window.getComputedStyle(slidesWrapper).width;
+    const width = +window.getComputedStyle(slidesWrapper).width.slice(0, -2);
     let slideIndex = 1;
     let offset = 0;
 
     if (slides.length < 10) {
         total.textContent = `0${slides.length}`;
-        current.textContent = `0${slideIndex}`;
     } else {
         total.textContent = slides.length;
-        current.textContent = slideIndex;
     }
 
     slidesField.style.width = 100 * slides.length + '%';
     slidesField.style.display = 'flex';
     slidesField.style.transition = '0.5s all';
-
     slidesWrapper.style.overflow = 'hidden';
 
     slides.forEach((slide) => {
-        slide.style.width = width;
+        slide.style.width = `${width}px`;
     });
 
-    next.addEventListener('click', () => {
-        if (
-            offset ===
-            +width.slice(0, width.length - 2) * (slides.length - 1)
-        ) {
-            offset = 0;
-        } else {
-            offset += +width.slice(0, width.length - 2);
+    slider.style.position = 'relative';
+
+    const idicators = document.createElement('ol');
+    const dots = [];
+    idicators.classList.add('dots-idicators');
+    idicators.style.cssText = `
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 15;
+        display: flex;
+        justify-content: center;
+        margin-right: 15%;
+        margin-left: 15%;
+        list-style: none;
+    `;
+    slider.append(idicators);
+
+    for (let i = 0; i < slides.length; i++) {
+        const dot = document.createElement('li');
+        dot.setAttribute('data-slide-to', i + 1);
+        dot.style.cssText = `
+            box-sizing: content-box;
+            flex: 0 1 auto;
+            width: 30px;
+            height: 6px;
+            margin-right: 3px;
+            margin-left: 3px;
+            cursor: pointer;
+            background-color: #fff;
+            background-clip: padding-box;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            opacity: 0.5;
+            transition: opacity 0.6s ease;
+        `;
+        if (i === 0) {
+            dot.style.opacity = 1;
         }
 
+        idicators.append(dot);
+        dots.push(dot);
+    }
+
+    // Функция обновления текущего слайда и дотсов
+    function updateCurrentSlide() {
+        current.textContent = slideIndex < 10 ? `0${slideIndex}` : slideIndex;
+        dots.forEach((dot) => (dot.style.opacity = '.5'));
+        dots[slideIndex - 1].style.opacity = 1;
+    }
+
+    updateCurrentSlide();
+
+    // Функция перемещения слайдов
+    function moveToSlide(newIndex) {
+        // проверка на наличие массива
+        if (newIndex < 1) {
+            newIndex = slides.length;
+        } else if (newIndex > slides.length) {
+            newIndex = 1;
+        }
+
+        slideIndex = newIndex;
+        offset = width * (slideIndex - 1);
         slidesField.style.transform = `translateX(-${offset}px)`;
+        updateCurrentSlide();
+    }
 
+    next.addEventListener('click', () => {
         if (slideIndex === slides.length) {
-            slideIndex = 1;
+            moveToSlide(1);
         } else {
-            slideIndex += 1;
-        }
-
-        if (slides.length < 10) {
-            current.textContent = `0${slideIndex}`;
-        } else {
-            current.textContent = slideIndex;
+            moveToSlide(slideIndex + 1);
         }
     });
 
     prev.addEventListener('click', () => {
-        if (offset === 0) {
-            offset = +width.slice(0, width.length - 2) * (slides.length - 1);
-        } else {
-            offset -= +width.slice(0, width.length - 2);
-        }
-
-        slidesField.style.transform = `translateX(-${offset}px)`;
-
         if (slideIndex === 1) {
-            slideIndex = slides.length;
+            moveToSlide(slides.length);
         } else {
-            slideIndex -= 1;
-        }
-
-        if (slides.length < 10) {
-            current.textContent = `0${slideIndex}`;
-        } else {
-            current.textContent = slideIndex;
+            moveToSlide(slideIndex - 1);
         }
     });
+
+    dots.forEach((dot) => {
+        dot.addEventListener('click', (e) => {
+            moveToSlide(+e.target.getAttribute('data-slide-to'));
+        });
+    });
+
+    // ================== Calc ====================
+    const result = document.querySelector('.calculating__result span');
+    let sex = 'female',
+        height,
+        weidht,
+        age,
+        ratio = 1.375;
+
+    function calcTotal() {
+        if (!sex || !height || !weidht || !age || !ratio) {
+            result.textContent = 'Не все данные';
+            return;
+        }
+
+        if (sex === 'female') {
+            result.textContent = Math.round(
+                (447.6 + 9.2 * weidht + 3.1 * height - 4.3 * age) * ratio
+            );
+        } else {
+            result.textContent = Math.round(
+                (88.36 + 13.4 * weidht + 4.8 * height - 5.7 * age) * ratio
+            );
+        }
+    }
+    calcTotal();
+
+    function getStaticInfo(parentSelector, activeClass) {
+        const elements = document.querySelectorAll(`${parentSelector} div`);
+
+        elements.forEach((elem) => {
+            elem.addEventListener('click', (e) => {
+                if (e.target.getAttribute('data-ratio')) {
+                    ratio = +e.target.getAttribute('data-ratio');
+                } else {
+                    sex = e.target.getAttribute('id');
+                }
+
+                elements.forEach((elem) => {
+                    elem.classList.remove(activeClass);
+                });
+
+                e.target.classList.add(activeClass);
+                calcTotal();
+            });
+        });
+    }
+    getStaticInfo('#gender', 'calculating__choose-item_active');
+    getStaticInfo(
+        '.calculating__choose_big',
+        'calculating__choose-item_active'
+    );
+
+    function getDynamicInfo(selector) {
+        const input = document.querySelector(selector);
+
+        input.addEventListener('input', () => {
+            switch (input.getAttribute('id')) {
+                case 'height':
+                    height = +input.value;
+                    break;
+                case 'weight':
+                    weidht = +input.value;
+                    break;
+                case 'age':
+                    age = +input.value;
+                    break;
+            }
+            calcTotal();
+        });
+    }
+
+    getDynamicInfo('#height');
+    getDynamicInfo('#weight');
+    getDynamicInfo('#age');
 });
