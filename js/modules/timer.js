@@ -1,7 +1,5 @@
 // ================== Timer ====================
-export default function timer() {
-    const deadline = '2025-04-03';
-
+export default function timer(id, deadline) {
     function getTimeRemaining(end) {
         const t = Date.parse(end) - Date.parse(new Date());
         const days = Math.floor(t / (1000 * 60 * 60 * 24));
@@ -49,5 +47,5 @@ export default function timer() {
         }
     }
 
-    setClock('.timer', deadline);
+    setClock(id, deadline);
 }

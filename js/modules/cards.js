@@ -1,5 +1,7 @@
-// =============== Классы для карточек ================
+import { getResource } from '../services/services';
+
 export default function cards() {
+    // =============== Классы для карточек ================
     class MenuCard {
         constructor(src, alt, title, descr, price, parentSelector, ...classes) {
             this.src = src;
@@ -45,16 +47,6 @@ export default function cards() {
             this.parent.append(element);
         }
     }
-
-    const getResource = async (url) => {
-        const res = await fetch(url);
-
-        if (!res.ok) {
-            throw new Error(`Fetching ${url} failed ,status: ${res.status}`);
-        }
-
-        return await res.json();
-    };
 
     getResource('http://localhost:3000/menu').then((data) => {
         data.forEach(({ img, altimg, title, descr, price }) => {

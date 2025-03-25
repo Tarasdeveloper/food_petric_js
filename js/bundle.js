@@ -7,7 +7,7 @@
   \**********************/
 /***/ (() => {
 
-throw new Error("Module parse failed: 'import' and 'export' may appear only with 'sourceType: module' (1:0)\nYou may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders\n> import tabs from './modules/tabs';\n| import modal from './modules/modal';\n| import calc from './modules/calc';");
+throw new Error("Module parse failed: 'import' and 'export' may appear only with 'sourceType: module' (1:0)\nYou may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders\n> import tabs from './modules/tabs';\n| import modal, { openModal } from './modules/modal';\n| import calc from './modules/calc';");
 
 /***/ })
 
