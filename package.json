@@ -8,7 +8,8 @@
     "type": "commonjs",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "babel js --out-dir dist"
     },
     "browserslist": [
         "> 1%",
@@ -21,8 +22,7 @@
         "babel-loader": "^10.0.0",
         "core-js": "^3.41.0",
         "json-server": "^1.0.0-beta.3",
-        "webpack": "^5.98.0",
-        "webpack-cli": "^6.0.1"
+        "vite": "^6.2.3"
     },
     "dependencies": {
         "es6-promise": "^4.2.8",

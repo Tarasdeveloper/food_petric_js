@@ -1,13 +1,11 @@
-import 'core-js/stable';
-import 'nodelist-foreach-polyfill';
-
-import tabs from './modules/tabs';
-import modal, { openModal } from './modules/modal';
-import calc from './modules/calc';
-import cards from './modules/cards';
-import forms from './modules/forms';
-import slider from './modules/slider';
-import timer from './modules/timer';
+import tabs from './modules/tabs.js';
+import modal, { openModal } from './modules/modal.js';
+import calc from './modules/calc.js';
+import cards from './modules/cards.js';
+import forms from './modules/forms.js';
+import slider from './modules/slider.js';
+import timer from './modules/timer.js';
+// import 'nodelist-foreach-polyfill';
 
 window.addEventListener('DOMContentLoaded', () => {
     const modalTimerId = setTimeout(
@@ -19,7 +17,7 @@ window.addEventListener('DOMContentLoaded', () => {
         '.tabheader__item',
         '.tabcontent',
         '.tabheader__items',
-        '.tabheader__item_active'
+        'tabheader__item_active'
     );
     modal('[data-modal]', '.modal', modalTimerId);
     timer('.timer', '2025-04-02');

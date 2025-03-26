@@ -1,5 +1,5 @@
-// ================== Modal ====================
 function openModal(modalSelector, modalTimerId) {
+    // ================== Modal ====================
     const modal = document.querySelector(modalSelector);
     modal.classList.add('show');
     modal.classList.remove('hide');

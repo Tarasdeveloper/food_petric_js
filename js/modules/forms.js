@@ -1,5 +1,5 @@
-import { postData } from '../services/services';
-import { closeModal, openModal } from './modal';
+import { postData } from '../services/services.js';
+import { closeModal, openModal } from './modal.js';
 // ================== Forms ====================
 export default function forms(formSelector, modalTimerId) {
     const forms = document.querySelectorAll(formSelector);
@@ -37,6 +37,7 @@ export default function forms(formSelector, modalTimerId) {
 
             postData('http://localhost:3000/requests', json)
                 .then((data) => {
+                    console.log(data);
                     showThanksModal(message.success);
                     statusMessage.remove();
                 })
